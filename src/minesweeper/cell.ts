@@ -1,4 +1,4 @@
-import { createElement } from "./board";
+import { createElement } from "./dom";
 
 export class Cell {
   row: number;
