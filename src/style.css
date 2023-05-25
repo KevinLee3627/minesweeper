@@ -10,18 +10,18 @@ body {
 }
 
 #board {
-  width: 450px;
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: repeat(9, 1fr);
+  width: 450px;
 }
 
 .cell {
-  height: 50px;
-  width: 50px;
   border: 1px solid red;
   color: white;
   font-size: 1.5rem;
+  height: 50px;
+  width: 50px;
 }
 
 .mine {
