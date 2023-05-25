@@ -24,15 +24,10 @@ export class Cell {
     });
 
     this.elem.addEventListener("click", () => this.click());
-    this.elem.addEventListener(
-      "contextmenu",
-      e => {
-        e.preventDefault();
-        console.log("asdfsd");
-        this.rightclick();
-      },
-      false
-    );
+    this.elem.addEventListener("contextmenu", e => {
+      e.preventDefault();
+      this.rightclick();
+    });
   }
 
   toggleFlag() {
@@ -46,16 +41,16 @@ export class Cell {
   }
 
   reveal() {
-    this.isRevealed = true;
-    this.elem.classList.add("revealed");
-    console.log(`revealed cell @ ${this.row}, ${this.col}`);
     // Also reveal all adjacent cells where minesAround = 0;
     // Could probably be more efficient. Double-checks too many squares
     this.elem.textContent =
       this.minesAround === 0 ? "" : this.minesAround.toString();
-    if (this.minesAround === 0) {
+    if (this.minesAround === 0 && !this.isRevealed) {
+      this.isRevealed = true;
+      this.elem.classList.add("revealed");
       this.neighbors.forEach(cell => {
-        if (cell.minesAround === 0 && !cell.isRevealed) cell.reveal();
+        // if (cell.minesAround === 0 && !cell.isRevealed) cell.reveal();
+        cell.reveal();
       });
     }
   }
@@ -74,8 +69,7 @@ export class Cell {
 
   click() {
     if (this.isMine) {
-      console.log(`clicked mine @ ${this.row}, ${this.col}`);
-      alert("you lose");
+      console.log("you lose");
     } else {
       if (!this.isRevealed) this.reveal();
     }
