@@ -49,9 +49,13 @@ export class Cell {
       this.isRevealed = true;
       this.elem.classList.add("revealed");
       this.neighbors.forEach(cell => {
-        // if (cell.minesAround === 0 && !cell.isRevealed) cell.reveal();
         cell.reveal();
       });
+    } else {
+      // If the square you click on originally is a number,
+      // this
+      this.isRevealed = true;
+      this.elem.classList.add("revealed");
     }
   }
 
@@ -69,9 +73,30 @@ export class Cell {
 
   click() {
     if (this.isMine) {
-      console.log("you lose");
-    } else {
-      if (!this.isRevealed) this.reveal();
+      return;
+    }
+
+    if (!this.isRevealed) {
+      this.reveal();
+      return;
+    }
+
+    // If clicking on a revealed cell, check if # of flags around it
+    // is equal to number of mines arouund it. If true, reveal the remaining squares.
+    // If false, do nothing.
+
+    const numFlagsAround = this.neighbors.reduce((acc, cell) => {
+      if (cell.isFlagged) acc++;
+      return acc;
+    }, 0);
+
+    if (numFlagsAround === this.minesAround) {
+      // Reveal remaining squares
+      this.neighbors.forEach(cell => {
+        if (cell.isFlagged || cell.isRevealed || cell.isMine) return;
+
+        cell.reveal();
+      });
     }
   }
 
