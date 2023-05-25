@@ -24,6 +24,15 @@ export class Cell {
     });
 
     this.elem.addEventListener("click", () => this.click());
+    this.elem.addEventListener(
+      "contextmenu",
+      e => {
+        e.preventDefault();
+        console.log("asdfsd");
+        this.rightclick();
+      },
+      false
+    );
   }
 
   toggleFlag() {
@@ -51,6 +60,14 @@ export class Cell {
     }
   }
 
+  flag() {
+    if (this.isRevealed) return;
+
+    this.isFlagged = !this.isFlagged;
+    if (this.isFlagged) this.elem.classList.add("flagged");
+    else this.elem.classList.remove("flagged");
+  }
+
   setMinesAround(num: number) {
     this.minesAround = num;
   }
@@ -58,8 +75,13 @@ export class Cell {
   click() {
     if (this.isMine) {
       console.log(`clicked mine @ ${this.row}, ${this.col}`);
+      alert("you lose");
     } else {
       if (!this.isRevealed) this.reveal();
     }
+  }
+
+  rightclick() {
+    this.flag();
   }
 }
