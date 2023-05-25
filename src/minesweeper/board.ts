@@ -15,6 +15,23 @@ export class Board {
       throw new Error("Board element not found.");
     }
     this.elem = boardElem;
+
+    this.elem.addEventListener("click", e => {
+      const cell = this.getCellFromClick(e);
+      if (cell == null) return;
+
+      this.cellClick(Number(cell.row), Number(cell.col));
+    });
+
+    this.elem.addEventListener("contextmenu", e => {
+      e.preventDefault();
+      const cell = this.getCellFromClick(e);
+      if (cell == null) return;
+
+      cell.rightclick();
+    });
+
+    // Adjust the grid based on the board size.
     this.elem.style.gridTemplateColumns = `repeat(${cols}, 24px)`;
     this.elem.style.gridTemplateRows = `repeat(${rows}, 24px)`;
 
@@ -27,7 +44,7 @@ export class Board {
     for (let row = 0; row < this.rows; row++) {
       const rowCells = [];
       for (let col = 0; col < this.cols; col++) {
-        const cell = new Cell(row, col);
+        const cell = new Cell({ row, col });
         rowCells.push(cell);
         this.elem.append(cell.elem);
       }
@@ -62,6 +79,51 @@ export class Board {
         cell.setMinesAround(mineCount);
       }
     }
+  }
+
+  cellClick(row: number, col: number): void {
+    const cell = this.cells[row][col];
+    if (cell.isMine) {
+      alert("game over!");
+      return;
+    }
+
+    if (!cell.isRevealed) {
+      cell.reveal();
+      return;
+    }
+
+    // If clicking on a revealed cell, check if # of flags around it
+    // is equal to number of mines arouund it. If true, reveal the remaining squares.
+    // If false, do nothing.
+
+    const numFlagsAround = cell.neighbors.reduce((acc, cell) => {
+      if (cell.isFlagged) acc++;
+      return acc;
+    }, 0);
+
+    if (numFlagsAround === cell.minesAround) {
+      // Check if the flagged squares match the actual mines.
+      // If not, game over.
+      // If true, Reveal remaining squares
+      cell.neighbors.forEach(cell => {
+        if (cell.isFlagged || cell.isRevealed || cell.isMine) return;
+
+        cell.reveal();
+      });
+    }
+  }
+
+  getCellFromClick(e: MouseEvent): Cell | null {
+    if (!(e.target instanceof Element)) return null;
+
+    if (!e.target.classList.contains("cell")) return null;
+
+    const row = Number(e.target.attributes.getNamedItem("row")?.value);
+    const col = Number(e.target.attributes.getNamedItem("col")?.value);
+    if (row == null || col == null) return null;
+
+    return this.cells[row][col];
   }
 
   getAdjacent(cell: Cell): Cell[] {
