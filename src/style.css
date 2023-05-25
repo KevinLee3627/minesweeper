@@ -1,8 +1,33 @@
-#app {
-  color: #2c3e50;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  margin-top: 60px;
-  text-align: center;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #222;
+}
+
+#board {
+  width: 450px;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+}
+
+.cell {
+  height: 50px;
+  width: 50px;
+  border: 1px solid red;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.mine {
+  background-color: purple;
+}
+
+.revealed {
+  background-color: blue;
 }
