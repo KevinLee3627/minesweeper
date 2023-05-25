@@ -15,6 +15,8 @@ export class Board {
       throw new Error("Board element not found.");
     }
     this.elem = boardElem;
+    this.elem.style.gridTemplateColumns = `repeat(${cols}, 24px)`;
+    this.elem.style.gridTemplateRows = `repeat(${rows}, 24px)`;
 
     this.rows = rows;
     this.cols = cols;
@@ -83,8 +85,3 @@ export class Board {
     return adjacentCells;
   }
 }
-function setupBoard() {
-  const board = new Board(9, 9, 10);
-}
-
-setupBoard();
