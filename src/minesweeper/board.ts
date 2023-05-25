@@ -84,7 +84,7 @@ export class Board {
   cellClick(row: number, col: number): void {
     const cell = this.cells[row][col];
     if (cell.isMine) {
-      alert("game over!");
+      this.gameOver();
       return;
     }
 
@@ -105,6 +105,19 @@ export class Board {
     if (numFlagsAround === cell.minesAround) {
       // Check if the flagged squares match the actual mines.
       // If not, game over.
+      const isCorrectFlags = cell.neighbors.reduce((acc, cell) => {
+        // cell = mine, cell = no flag     --> incorrect
+        // cell = mine, cell = flag        --> correct
+        // cell = not mine, cell = no flag --> correct
+        // cell = not mine, cell = flag    --> incorrect
+        return (
+          (cell.isMine && !cell.isFlagged) || (!cell.isMine && cell.isFlagged)
+        );
+      }, true);
+      if (!isCorrectFlags) {
+        this.gameOver();
+        return;
+      }
       // If true, Reveal remaining squares
       cell.neighbors.forEach(cell => {
         if (cell.isFlagged || cell.isRevealed || cell.isMine) return;
@@ -145,5 +158,9 @@ export class Board {
     }
 
     return adjacentCells;
+  }
+
+  gameOver() {
+    alert("game ove!");
   }
 }
