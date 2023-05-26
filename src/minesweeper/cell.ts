@@ -69,8 +69,4 @@ export class Cell {
   setMinesAround(num: number) {
     this.minesAround = num;
   }
-
-  rightclick() {
-    this.flag();
-  }
 }

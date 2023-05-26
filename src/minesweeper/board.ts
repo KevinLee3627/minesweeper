@@ -28,7 +28,7 @@ export class Board {
       const cell = this.getCellFromClick(e);
       if (cell == null) return;
 
-      cell.rightclick();
+      cell.flag();
     });
 
     // Adjust the grid based on the board size.
