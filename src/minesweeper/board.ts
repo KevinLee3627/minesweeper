@@ -130,12 +130,11 @@ export class Board {
   }
 
   getCellFromClick(e: MouseEvent): Cell | null {
-    if (!(e.target instanceof Element)) return null;
+    if (!(e.target instanceof HTMLElement)) return null;
 
     if (!e.target.classList.contains("cell")) return null;
-
-    const row = Number(e.target.attributes.getNamedItem("row")?.value);
-    const col = Number(e.target.attributes.getNamedItem("col")?.value);
+    const row = Number(e.target.dataset.row);
+    const col = Number(e.target.dataset.col);
     if (row == null || col == null) return null;
 
     return this.cells[row][col];

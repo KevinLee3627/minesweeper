@@ -28,8 +28,8 @@ export class Cell {
       type: "div",
       classes: ["cell"],
       attributes: [
-        { name: "row", value: row.toString(10) },
-        { name: "col", value: col.toString(10) },
+        { name: "data-row", value: row.toString(10) },
+        { name: "data-col", value: col.toString(10) },
       ],
     });
   }
