@@ -8,12 +8,17 @@ export interface BoardSettings {
 }
 
 export class Board {
+  id: string = new Date().toISOString();
   rows: number;
   cols: number;
   numMines: number;
   cells: Cell[][];
 
   elem: HTMLElement;
+
+  // https://stackoverflow.com/questions/9720927/removing-event-listeners-as-class-prototype-functions
+  clickHandler = this.handleClick.bind(this);
+  rightClickHandler = this.handleRightClick.bind(this);
 
   constructor({ rows, cols, numMines }: BoardSettings) {
     const boardElem = document.getElementById("board");
@@ -22,20 +27,9 @@ export class Board {
     }
     this.elem = boardElem;
 
-    this.elem.addEventListener("click", e => {
-      const cell = this.getCellFromClick(e);
-      if (cell == null) return;
+    this.elem.addEventListener("click", this.clickHandler);
 
-      this.cellClick(Number(cell.row), Number(cell.col));
-    });
-
-    this.elem.addEventListener("contextmenu", e => {
-      e.preventDefault();
-      const cell = this.getCellFromClick(e);
-      if (cell == null) return;
-
-      cell.flag();
-    });
+    this.elem.addEventListener("contextmenu", this.rightClickHandler);
 
     // Adjust the grid based on the board size.
     this.elem.style.gridTemplateColumns = `repeat(${cols}, 24px)`;
@@ -136,6 +130,7 @@ export class Board {
   }
 
   getCellFromClick(e: MouseEvent): Cell | null {
+    console.log(`Board ID: ${this.id}`);
     if (!(e.target instanceof HTMLElement)) return null;
 
     if (!e.target.classList.contains("cell")) return null;
@@ -168,6 +163,27 @@ export class Board {
   }
 
   gameOver() {
-    alert("game ove!");
+    console.log("game ove!");
+  }
+
+  handleClick(e: MouseEvent) {
+    const cell = this.getCellFromClick(e);
+    if (cell == null) return;
+
+    this.cellClick(Number(cell.row), Number(cell.col));
+  }
+
+  handleRightClick(e: MouseEvent) {
+    e.preventDefault();
+    const cell = this.getCellFromClick(e);
+    if (cell == null) return;
+
+    cell.flag();
+  }
+
+  cleanup() {
+    this.elem.removeEventListener("click", this.clickHandler);
+    this.elem.removeEventListener("contextmenu", this.rightClickHandler);
+    console.log("removed event listeners");
   }
 }

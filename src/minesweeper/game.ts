@@ -23,34 +23,35 @@ difficultySettings.set(Difficulty.EXPERT, {
   numMines: 99,
 });
 
-export class Game extends EventTarget {
-  board: Board;
+export class Game {
+  board: Board | null = null;
   time = 0;
   difficulty: Difficulty = Difficulty.BEGINNER;
-
-  constructor(board: Board) {
-    super();
-    this.board = board;
-  }
 
   setDifficulty(difficulty: Difficulty): void {
     this.difficulty = difficulty;
   }
-}
 
-function startGame(difficulty: Difficulty) {
-  // Clear Cell HTML elements that may exist.
-  const cells = Array.from(document.getElementsByClassName("cell"));
-  cells.forEach(element => {
-    element.remove();
-  });
-
-  const boardSettings = difficultySettings.get(difficulty);
-  if (boardSettings == null) {
-    throw new Error("Invalid game settings loaded.");
+  setBoard(board: Board): void {
+    this.board = board;
   }
-  const board = new Board(boardSettings);
-  const game = new Game(board);
+
+  start(difficulty: Difficulty) {
+    // Clear Cell HTML elements that may exist.
+    const cells = Array.from(document.getElementsByClassName("cell"));
+    cells.forEach(element => {
+      element.remove();
+    });
+
+    this.board?.cleanup();
+
+    const boardSettings = difficultySettings.get(difficulty);
+    if (boardSettings == null) {
+      throw new Error("Invalid game settings loaded.");
+    }
+    const board = new Board(boardSettings);
+    this.setBoard(board);
+  }
 }
 
 function main() {
@@ -70,12 +71,15 @@ function main() {
     btnSelectExpert,
   ];
 
+  const game = new Game();
+
   difficultySelectBtns.forEach(btn => {
     btn.addEventListener("click", e => {
       if (!(e.target instanceof HTMLElement)) return null;
 
       const difficulty = Number(e.target.dataset.difficulty);
-      startGame(difficulty);
+
+      game.start(difficulty);
     });
   });
 }
