@@ -1,6 +1,12 @@
 import { Cell } from "./cell";
 import { getRandomInt } from "./util";
 
+export interface BoardSettings {
+  rows: number;
+  cols: number;
+  numMines: number;
+}
+
 export class Board {
   rows: number;
   cols: number;
@@ -9,7 +15,7 @@ export class Board {
 
   elem: HTMLElement;
 
-  constructor(rows: number, cols: number, numMines: number) {
+  constructor({ rows, cols, numMines }: BoardSettings) {
     const boardElem = document.getElementById("board");
     if (boardElem == null) {
       throw new Error("Board element not found.");
