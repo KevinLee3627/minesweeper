@@ -1,4 +1,5 @@
 import { Board, BoardSettings } from "./board";
+import { Timer } from "./timer";
 
 export enum Difficulty {
   BEGINNER,
@@ -49,7 +50,8 @@ export class Game {
     if (boardSettings == null) {
       throw new Error("Invalid game settings loaded.");
     }
-    const board = new Board(boardSettings);
+    const timer = new Timer(1000);
+    const board = new Board({ ...boardSettings, timer });
     this.setBoard(board);
   }
 }

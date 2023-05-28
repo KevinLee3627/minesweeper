@@ -1,4 +1,5 @@
 import { Cell } from "./cell";
+import { Timer } from "./timer";
 import { getRandomInt } from "./util";
 
 export interface BoardSettings {
@@ -7,23 +8,28 @@ export interface BoardSettings {
   numMines: number;
 }
 
+export interface BoardConstructor extends BoardSettings {
+  timer: Timer;
+}
+
 export class Board {
   id: string = new Date().toISOString();
   rows: number;
   cols: number;
   numMines: number;
   cells: Cell[][];
-
+  boardStarted = false;
   numRevealed = 0;
 
   elem: HTMLElement;
+  timer: Timer;
 
   // https://stackoverflow.com/questions/9720927/removing-event-listeners-as-class-prototype-functions
   clickHandler = this.handleClick.bind(this);
   rightClickHandler = this.handleRightClick.bind(this);
   revealHandler = this.handleReveal.bind(this);
 
-  constructor({ rows, cols, numMines }: BoardSettings) {
+  constructor({ rows, cols, numMines, timer }: BoardConstructor) {
     const boardElem = document.getElementById("board");
     if (boardElem == null) {
       throw new Error("Board element not found.");
@@ -33,6 +39,8 @@ export class Board {
     this.elem.addEventListener("click", this.clickHandler);
     this.elem.addEventListener("contextmenu", this.rightClickHandler);
     this.elem.addEventListener("reveal", this.revealHandler);
+
+    this.timer = timer;
 
     // Adjust the grid based on the board size.
     this.elem.style.gridTemplateColumns = `repeat(${cols}, 24px)`;
@@ -87,6 +95,10 @@ export class Board {
   }
 
   cellClick(row: number, col: number): void {
+    if (!this.boardStarted) {
+      this.boardStarted = true;
+      this.timer.start();
+    }
     const cell = this.cells[row][col];
     if (cell.isMine) {
       this.gameOver();
@@ -173,11 +185,11 @@ export class Board {
       return;
     }
 
-    console.log("YOU WIN!");
+    this.timer.stop();
   }
 
   gameOver() {
-    console.log("game ove!");
+    this.timer.stop();
   }
 
   handleClick(e: MouseEvent) {
