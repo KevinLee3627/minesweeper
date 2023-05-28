@@ -46,6 +46,7 @@ export class Cell {
       this.minesAround === 0 ? "" : this.minesAround.toString();
 
     if (this.isRevealed) return;
+    if (this.isFlagged) return;
 
     if (this.minesAround === 0) {
       this.isRevealed = true;
