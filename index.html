@@ -8,26 +8,44 @@
     <link rel="stylesheet" href="/src/style.css" />
   </head>
 
+  <input type="checkbox" id="settingsModal" class="modal-toggle" />
+  <label for="settingsModal" class="modal cursor-pointer">
+    <label for="" class="modal-box relative">
+      <h3>thanks</h3>
+      <label
+        for="settingsModal"
+        class="btn btn-sm btn-circle absolute right-2 top-2"
+        >✕</label
+      >
+    </label>
+  </label>
+
   <body>
-    <div class="h-screen w-screen flex flex-col items-center border">
-      <div
-        id="board"
-        class="border border-amber-400 min-h-max min-w-max grid"
-      ></div>
-      <div id="difficultySelect" class="">
-        <button id="selectBeginner" data-difficulty="0" class="btn btn-outline">
-          Easy
-        </button>
-        <button
-          id="selectIntermediate"
-          data-difficulty="1"
-          class="btn btn-outline"
-        >
-          Intermediate
-        </button>
-        <button id="selectExpert" data-difficulty="2" class="btn btn-outline">
-          Expert
-        </button>
+    <div class="h-screen w-screen flex flex-col items-center gap-2">
+      <div id="board" class="min-h-max min-w-max grid"></div>
+      <div id="settingsContainer" class="flex items-center gap-4">
+        <div id="difficultySelect" class="btn-group btn-group-horizontal">
+          <button
+            id="selectBeginner"
+            data-difficulty="0"
+            class="btn btn-outline"
+          >
+            Easy
+          </button>
+          <button
+            id="selectIntermediate"
+            data-difficulty="1"
+            class="btn btn-outline"
+          >
+            Intermediate
+          </button>
+          <button id="selectExpert" data-difficulty="2" class="btn btn-outline">
+            Expert
+          </button>
+        </div>
+        <label for="settingsModal" class="btn btn-outline">
+          <img src="src/assets/gear.svg" alt="Gear" class="h-4"
+        /></label>
       </div>
     </div>
     <script type="module" src="/src/minesweeper/game.ts"></script>
