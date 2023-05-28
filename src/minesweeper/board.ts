@@ -93,15 +93,16 @@ export class Board {
 
     if (!cell.isRevealed) {
       cell.reveal();
-      return;
+    } else {
+      this.clickRevealedCell(row, col);
     }
 
-    this.clickRevealedCell(row, col);
-    // If clicking on a revealed cell, check if # of flags around it
-    // is equal to number of mines arouund it. If true, reveal the remaining squares.
-    // If false, do nothing.
+    this.checkWin();
   }
 
+  // If clicking on a revealed cell, check if # of flags around it
+  // is equal to number of mines arouund it. If true, reveal the remaining squares.
+  // If false, do nothing.
   clickRevealedCell(row: number, col: number) {
     const cell = this.cells[row][col];
 
@@ -169,6 +170,28 @@ export class Board {
     return adjacentCells;
   }
 
+  checkWin() {
+    // Check if all cells are revealed
+    console.log(`num revealed: ${this.numRevealed}`);
+    if (this.numRevealed !== this.rows * this.cols - this.numMines) {
+      return;
+    }
+
+    console.log("YOU WIN!");
+
+    // Check if flagged mines is correct
+    // Check if locations of flagged mines are correct
+    // const flaggedMineCells = this.cells
+    //   .flat()
+    //   .filter(cell => cell.isMine && cell.isFlagged);
+    // console.log(flaggedMineCells);
+    // if (flaggedMineCells.length !== this.numMines) {
+    //   console.log("NOT RIGHT");
+    //   return;
+    // }
+    // console.log("YOU WIN");
+  }
+
   gameOver() {
     console.log("game ove!");
   }
@@ -186,6 +209,8 @@ export class Board {
     if (cell == null) return;
 
     cell.flag();
+
+    this.checkWin();
   }
 
   handleReveal() {
