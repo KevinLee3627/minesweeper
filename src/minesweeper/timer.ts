@@ -36,6 +36,12 @@ export class Timer {
     this.timerElem.hidden = true;
   }
 
+  reset() {
+    this.stop();
+    this.total = 0;
+    this.timerElem.textContent = "";
+  }
+
   #update(timeStep: number) {
     this.total += timeStep;
 

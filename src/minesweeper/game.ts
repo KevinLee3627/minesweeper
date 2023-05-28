@@ -82,6 +82,7 @@ export class Game {
     if (!isCustomEvent<GameEndEvent>(e, "status"))
       throw new Error("Not gameEnd event");
     this.board?.cleanup();
+    this.timer.reset();
     this.timer.hide();
   }
 }
