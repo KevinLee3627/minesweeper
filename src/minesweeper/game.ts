@@ -1,11 +1,21 @@
 import { Board, BoardSettings } from "./board";
 import { Settings, SettingsManager } from "./settings";
 import { Timer } from "./timer";
+import { isMyCustomEvent } from "./util";
 
 export enum Difficulty {
   BEGINNER,
   INTERMEDIATE,
   EXPERT,
+}
+
+export enum GameStatus {
+  WIN,
+  LOSE,
+}
+
+export interface GameEndEvent {
+  status: GameStatus;
 }
 
 const difficultySettings: Map<Difficulty, BoardSettings> = new Map();
@@ -27,12 +37,18 @@ difficultySettings.set(Difficulty.EXPERT, {
 
 export class Game {
   board: Board | null = null;
-  time = 0;
+  timer: Timer = new Timer(100);
   difficulty: Difficulty = Difficulty.BEGINNER;
   settings: Settings;
 
+  element: HTMLElement;
+
   constructor(settings: Settings) {
     this.settings = settings;
+    const element = document.getElementById("gameContainer");
+    if (element == null) throw new Error(`Could not gameContainer}`);
+    this.element = element;
+    this.element.addEventListener("gameEnd", this.end.bind(this));
   }
 
   setDifficulty(difficulty: Difficulty): void {
@@ -45,27 +61,28 @@ export class Game {
 
   start(difficulty: Difficulty) {
     // Clear Cell HTML elements that may exist.
-    const cells = Array.from(document.getElementsByClassName("cell"));
-    cells.forEach(element => {
-      element.remove();
-    });
-
     this.board?.cleanup();
 
     const boardSettings = difficultySettings.get(difficulty);
     if (boardSettings == null) {
       throw new Error("Invalid game settings loaded.");
     }
-    const timer = new Timer(1000);
-    console.log(this.settings);
+
     if (this.settings.showTimer) {
-      timer.show();
+      this.timer.show();
     } else {
-      timer.hide();
+      this.timer.hide();
     }
 
-    const board = new Board({ ...boardSettings, timer });
+    const board = new Board({ ...boardSettings, timer: this.timer });
     this.setBoard(board);
+  }
+
+  end(e: Event) {
+    if (!isMyCustomEvent<GameEndEvent>(e, "status"))
+      throw new Error("Not gameEnd event");
+    this.board?.cleanup();
+    this.timer.hide();
   }
 }
 

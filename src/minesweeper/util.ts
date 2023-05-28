@@ -16,3 +16,8 @@ export function isSettingChangedEvent(
   if (!isCustomEvent(event)) return false;
   return "settingId" in event.detail;
 }
+
+export function isMyCustomEvent<T>(event: Event, key: keyof T) {
+  if (!isCustomEvent(event)) return false;
+  return key in event.detail;
+}

@@ -1,4 +1,5 @@
 import { Cell } from "./cell";
+import { GameStatus } from "./game";
 import { Timer } from "./timer";
 import { getRandomInt } from "./util";
 
@@ -174,10 +175,22 @@ export class Board {
     }
 
     this.timer.stop();
+
+    const gameEndEvent = new CustomEvent("gameEnd", {
+      bubbles: true,
+      detail: { status: GameStatus.WIN },
+    });
+    this.elem.dispatchEvent(gameEndEvent);
   }
 
   gameOver() {
     this.timer.stop();
+
+    const gameEndEvent = new CustomEvent("gameEnd", {
+      bubbles: true,
+      detail: { status: GameStatus.LOSE },
+    });
+    this.elem.dispatchEvent(gameEndEvent);
   }
 
   handleClick(e: MouseEvent) {
@@ -205,5 +218,10 @@ export class Board {
     this.elem.removeEventListener("click", this.clickHandler);
     this.elem.removeEventListener("contextmenu", this.rightClickHandler);
     this.elem.removeEventListener("reveal", this.revealHandler);
+
+    const cells = Array.from(document.getElementsByClassName("cell"));
+    cells.forEach(element => {
+      element.remove();
+    });
   }
 }
