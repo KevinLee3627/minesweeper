@@ -1,5 +1,9 @@
 import { createElement } from "./dom";
 
+export interface RevealEventDetail {
+  cell: Cell;
+}
+
 interface CellConstructor {
   row: number;
   col: number;
@@ -44,17 +48,22 @@ export class Cell {
     // Could probably be more efficient. Double-checks too many squares
     this.elem.textContent =
       this.minesAround === 0 ? "" : this.minesAround.toString();
-    if (this.minesAround === 0 && !this.isRevealed) {
+
+    if (this.isRevealed) return;
+
+    if (this.minesAround === 0) {
       this.isRevealed = true;
       this.elem.classList.add("revealed");
+      const revealEvent = new CustomEvent("reveal", { bubbles: true });
+      this.elem.dispatchEvent(revealEvent);
       this.neighbors.forEach(cell => {
         cell.reveal();
       });
     } else {
-      // If the square you click on originally is a number,
-      // this
       this.isRevealed = true;
       this.elem.classList.add("revealed");
+      const revealEvent = new CustomEvent("reveal", { bubbles: true });
+      this.elem.dispatchEvent(revealEvent);
     }
   }
 

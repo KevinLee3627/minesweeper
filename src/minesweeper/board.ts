@@ -1,4 +1,4 @@
-import { Cell } from "./cell";
+import { Cell, RevealEventDetail } from "./cell";
 import { getRandomInt } from "./util";
 
 export interface BoardSettings {
@@ -14,11 +14,14 @@ export class Board {
   numMines: number;
   cells: Cell[][];
 
+  numRevealed = 0;
+
   elem: HTMLElement;
 
   // https://stackoverflow.com/questions/9720927/removing-event-listeners-as-class-prototype-functions
   clickHandler = this.handleClick.bind(this);
   rightClickHandler = this.handleRightClick.bind(this);
+  revealHandler = this.handleReveal.bind(this);
 
   constructor({ rows, cols, numMines }: BoardSettings) {
     const boardElem = document.getElementById("board");
@@ -28,8 +31,8 @@ export class Board {
     this.elem = boardElem;
 
     this.elem.addEventListener("click", this.clickHandler);
-
     this.elem.addEventListener("contextmenu", this.rightClickHandler);
+    this.elem.addEventListener("reveal", this.revealHandler);
 
     // Adjust the grid based on the board size.
     this.elem.style.gridTemplateColumns = `repeat(${cols}, 24px)`;
@@ -90,6 +93,8 @@ export class Board {
 
     if (!cell.isRevealed) {
       cell.reveal();
+      console.log(`# Squares revealed: ${this.numRevealed}`);
+
       return;
     }
 
@@ -115,7 +120,7 @@ export class Board {
           (cell.isMine && cell.isFlagged) || (!cell.isMine && !cell.isFlagged)
         );
       }, true);
-      console.log(isCorrectFlags);
+
       if (!isCorrectFlags) {
         this.gameOver();
         return;
@@ -179,6 +184,10 @@ export class Board {
     if (cell == null) return;
 
     cell.flag();
+  }
+
+  handleReveal() {
+    this.numRevealed++;
   }
 
   cleanup() {
