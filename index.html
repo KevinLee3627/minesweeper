@@ -9,17 +9,29 @@
   </head>
 
   <body>
-    <div id="board" class="border-4 border-amber-400"></div>
-    <div id="difficultySelect">
-      <button id="selectBeginner" data-difficulty="0" class="btn-outline">
-        Easy
-      </button>
-      <button id="selectIntermediate" data-difficulty="1" class="btn-outline">
-        Intermediate
-      </button>
-      <button id="selectExpert" data-difficulty="2" class="btn-outline">
-        Expert
-      </button>
+    <div class="h-screen w-screen grid grid-cols-12 grid-rows-2 border">
+      <div
+        id="board"
+        class="border border-amber-400 min-h-fit min-w-max grid col-span-4 col-start-4 row-start-1 row-span-1"
+      ></div>
+      <div
+        id="difficultySelect"
+        class="col-start-4 col-span-4 row-start-2 row-span-1"
+      >
+        <button id="selectBeginner" data-difficulty="0" class="btn btn-outline">
+          Easy
+        </button>
+        <button
+          id="selectIntermediate"
+          data-difficulty="1"
+          class="btn btn-outline"
+        >
+          Intermediate
+        </button>
+        <button id="selectExpert" data-difficulty="2" class="btn btn-outline">
+          Expert
+        </button>
+      </div>
     </div>
     <script type="module" src="/src/minesweeper/game.ts"></script>
   </body>

@@ -26,7 +26,14 @@ export class Cell {
 
     this.elem = createElement({
       type: "div",
-      classes: ["cell"],
+      classes: [
+        "h-6",
+        "w-6",
+        "border",
+        "border-red-500",
+        "text-2xl",
+        "text-white",
+      ],
       attributes: [
         { name: "data-row", value: row.toString(10) },
         { name: "data-col", value: col.toString(10) },
