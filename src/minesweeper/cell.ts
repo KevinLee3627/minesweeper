@@ -48,19 +48,15 @@ export class Cell {
     if (this.isRevealed) return;
     if (this.isFlagged) return;
 
+    this.isRevealed = true;
+    this.elem.classList.add("revealed");
+    const revealEvent = new CustomEvent("reveal", { bubbles: true });
+    this.elem.dispatchEvent(revealEvent);
+
     if (this.minesAround === 0) {
-      this.isRevealed = true;
-      this.elem.classList.add("revealed");
-      const revealEvent = new CustomEvent("reveal", { bubbles: true });
-      this.elem.dispatchEvent(revealEvent);
       this.neighbors.forEach(cell => {
         cell.reveal();
       });
-    } else {
-      this.isRevealed = true;
-      this.elem.classList.add("revealed");
-      const revealEvent = new CustomEvent("reveal", { bubbles: true });
-      this.elem.dispatchEvent(revealEvent);
     }
   }
 
