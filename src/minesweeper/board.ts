@@ -1,4 +1,4 @@
-import { Cell, RevealEventDetail } from "./cell";
+import { Cell } from "./cell";
 import { getRandomInt } from "./util";
 
 export interface BoardSettings {
@@ -193,6 +193,6 @@ export class Board {
   cleanup() {
     this.elem.removeEventListener("click", this.clickHandler);
     this.elem.removeEventListener("contextmenu", this.rightClickHandler);
-    console.log("removed event listeners");
+    this.elem.removeEventListener("reveal", this.revealHandler);
   }
 }

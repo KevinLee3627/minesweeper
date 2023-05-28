@@ -1,9 +1,5 @@
 import { createElement } from "./dom";
 
-export interface RevealEventDetail {
-  cell: Cell;
-}
-
 interface CellConstructor {
   row: number;
   col: number;
