@@ -60,9 +60,6 @@ export class Game {
   }
 
   start(difficulty: Difficulty) {
-    // Clear Cell HTML elements that may exist.
-    this.board?.cleanup();
-
     const boardSettings = difficultySettings.get(difficulty);
     if (boardSettings == null) {
       throw new Error("Invalid game settings loaded.");
