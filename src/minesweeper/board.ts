@@ -37,6 +37,8 @@ export class Board {
     // Adjust the grid based on the board size.
     this.elem.style.gridTemplateColumns = `repeat(${cols}, 24px)`;
     this.elem.style.gridTemplateRows = `repeat(${rows}, 24px)`;
+    this.elem.style.height = `${rows * 24}px`;
+    this.elem.style.width = `${cols * 24}px`;
 
     this.rows = rows;
     this.cols = cols;
