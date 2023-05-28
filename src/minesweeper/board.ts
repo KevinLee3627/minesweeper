@@ -106,6 +106,7 @@ export class Board {
   // is equal to number of mines arouund it. If true, reveal the remaining squares.
   // If false, do nothing.
   clickRevealedCell(row: number, col: number) {
+    // AKA Chording
     const cell = this.cells[row][col];
 
     const numFlagsAround = cell.neighbors.reduce((acc, cell) => {

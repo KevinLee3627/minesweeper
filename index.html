@@ -10,6 +10,10 @@
 
   <body>
     <div class="h-screen w-screen flex flex-col items-center border">
+      <div
+        id="board"
+        class="border border-amber-400 min-h-max min-w-max grid"
+      ></div>
       <div id="difficultySelect" class="">
         <button id="selectBeginner" data-difficulty="0" class="btn btn-outline">
           Easy
@@ -25,10 +29,6 @@
           Expert
         </button>
       </div>
-      <div
-        id="board"
-        class="border border-amber-400 min-h-max min-w-max grid"
-      ></div>
     </div>
     <script type="module" src="/src/minesweeper/game.ts"></script>
   </body>
