@@ -1,30 +1,36 @@
+import { Setting } from "./setting";
+import { isSettingChangedEvent } from "./util";
+
 export interface Settings {
   showTimer: boolean;
+  autoRestart: boolean;
 }
 
 const defaults: Settings = {
   showTimer: false,
+  autoRestart: false,
 };
 
 export class SettingsManager {
   LOCALSTORAGE_KEY = "player-settings";
   settings: Settings;
 
-  showTimerToggle;
+  settingChangedHandler = this.handleSettingChanged.bind(this);
 
   constructor() {
+    const settingsContainerElem = document.getElementById("settingsContainer");
+    if (settingsContainerElem == null)
+      throw new Error("settingsContainer not found");
+
+    settingsContainerElem.addEventListener(
+      "settingChanged",
+      this.settingChangedHandler
+    );
+
     this.settings = this.load();
 
-    const showTimerToggle = <HTMLInputElement>(
-      document.getElementById("showTimerToggle")
-    );
-    if (showTimerToggle == null) throw new Error("showTimerToggle not found.");
-    this.showTimerToggle = showTimerToggle;
-    this.showTimerToggle.checked = this.settings.showTimer;
-    this.showTimerToggle.addEventListener("click", e => {
-      this.settings.showTimer = this.showTimerToggle.checked;
-      this.save();
-    });
+    new Setting("showTimer", this.settings.showTimer);
+    new Setting("autoRestart", this.settings.autoRestart);
   }
 
   save() {
@@ -36,5 +42,12 @@ export class SettingsManager {
     if (settings == null) return defaults;
 
     return JSON.parse(settings) as Settings;
+  }
+
+  handleSettingChanged(e: Event) {
+    if (!isSettingChangedEvent(e))
+      throw new Error("Event is not a custom event");
+    this.settings[e.detail.settingId] = e.detail.value;
+    this.save();
   }
 }
