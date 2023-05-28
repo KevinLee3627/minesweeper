@@ -114,18 +114,12 @@ export class Board {
     if (numFlagsAround === cell.minesAround) {
       // Check if the flagged squares match the actual mines.
       // If not, game over.
-      const isCorrectFlags = cell.neighbors.reduce((_, cell) => {
-        // TODO: Fix
-        // cell = mine, cell = no flag     --> incorrect
-        // cell = mine, cell = flag        --> correct
-        // cell = not mine, cell = no flag --> correct
-        // cell = not mine, cell = flag    --> incorrect
-        return (
-          (cell.isMine && cell.isFlagged) || (!cell.isMine && !cell.isFlagged)
-        );
-      }, true);
 
-      if (!isCorrectFlags) {
+      const flaggedMineNeighbors = cell.neighbors.filter(
+        cell => cell.isMine && cell.isFlagged
+      );
+
+      if (flaggedMineNeighbors.length !== cell.minesAround) {
         this.gameOver();
         return;
       }
