@@ -75,10 +75,9 @@ function main() {
 
   difficultySelectBtns.forEach(btn => {
     btn.addEventListener("click", e => {
-      if (!(e.target instanceof HTMLElement)) return null;
+      if (!(e.target instanceof HTMLElement)) return;
 
       const difficulty = Number(e.target.dataset.difficulty);
-
       game.start(difficulty);
     });
   });

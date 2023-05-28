@@ -26,7 +26,15 @@ export class Cell {
 
     this.elem = createElement({
       type: "div",
-      classes: ["cell"],
+      classes: [
+        "cell",
+        "h-6",
+        "w-6",
+        "border",
+        "border-red-500",
+        "text-base",
+        "text-white",
+      ],
       attributes: [
         { name: "data-row", value: row.toString(10) },
         { name: "data-col", value: col.toString(10) },
@@ -48,19 +56,15 @@ export class Cell {
     if (this.isRevealed) return;
     if (this.isFlagged) return;
 
+    this.isRevealed = true;
+    this.elem.classList.add("revealed");
+    const revealEvent = new CustomEvent("reveal", { bubbles: true });
+    this.elem.dispatchEvent(revealEvent);
+
     if (this.minesAround === 0) {
-      this.isRevealed = true;
-      this.elem.classList.add("revealed");
-      const revealEvent = new CustomEvent("reveal", { bubbles: true });
-      this.elem.dispatchEvent(revealEvent);
       this.neighbors.forEach(cell => {
         cell.reveal();
       });
-    } else {
-      this.isRevealed = true;
-      this.elem.classList.add("revealed");
-      const revealEvent = new CustomEvent("reveal", { bubbles: true });
-      this.elem.dispatchEvent(revealEvent);
     }
   }
 

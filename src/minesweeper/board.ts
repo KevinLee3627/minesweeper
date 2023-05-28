@@ -37,6 +37,8 @@ export class Board {
     // Adjust the grid based on the board size.
     this.elem.style.gridTemplateColumns = `repeat(${cols}, 24px)`;
     this.elem.style.gridTemplateRows = `repeat(${rows}, 24px)`;
+    this.elem.style.height = `${rows * 24}px`;
+    this.elem.style.width = `${cols * 24}px`;
 
     this.rows = rows;
     this.cols = cols;
@@ -104,6 +106,7 @@ export class Board {
   // is equal to number of mines arouund it. If true, reveal the remaining squares.
   // If false, do nothing.
   clickRevealedCell(row: number, col: number) {
+    // AKA Chording
     const cell = this.cells[row][col];
 
     const numFlagsAround = cell.neighbors.reduce((acc, cell) => {
@@ -114,18 +117,12 @@ export class Board {
     if (numFlagsAround === cell.minesAround) {
       // Check if the flagged squares match the actual mines.
       // If not, game over.
-      const isCorrectFlags = cell.neighbors.reduce((_, cell) => {
-        // TODO: Fix
-        // cell = mine, cell = no flag     --> incorrect
-        // cell = mine, cell = flag        --> correct
-        // cell = not mine, cell = no flag --> correct
-        // cell = not mine, cell = flag    --> incorrect
-        return (
-          (cell.isMine && cell.isFlagged) || (!cell.isMine && !cell.isFlagged)
-        );
-      }, true);
 
-      if (!isCorrectFlags) {
+      const flaggedMineNeighbors = cell.neighbors.filter(
+        cell => cell.isMine && cell.isFlagged
+      );
+
+      if (flaggedMineNeighbors.length !== cell.minesAround) {
         this.gameOver();
         return;
       }
@@ -172,24 +169,11 @@ export class Board {
 
   checkWin() {
     // Check if all cells are revealed
-    console.log(`num revealed: ${this.numRevealed}`);
     if (this.numRevealed !== this.rows * this.cols - this.numMines) {
       return;
     }
 
     console.log("YOU WIN!");
-
-    // Check if flagged mines is correct
-    // Check if locations of flagged mines are correct
-    // const flaggedMineCells = this.cells
-    //   .flat()
-    //   .filter(cell => cell.isMine && cell.isFlagged);
-    // console.log(flaggedMineCells);
-    // if (flaggedMineCells.length !== this.numMines) {
-    //   console.log("NOT RIGHT");
-    //   return;
-    // }
-    // console.log("YOU WIN");
   }
 
   gameOver() {
