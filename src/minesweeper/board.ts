@@ -93,14 +93,17 @@ export class Board {
 
     if (!cell.isRevealed) {
       cell.reveal();
-      console.log(`# Squares revealed: ${this.numRevealed}`);
-
       return;
     }
 
+    this.clickRevealedCell(row, col);
     // If clicking on a revealed cell, check if # of flags around it
     // is equal to number of mines arouund it. If true, reveal the remaining squares.
     // If false, do nothing.
+  }
+
+  clickRevealedCell(row: number, col: number) {
+    const cell = this.cells[row][col];
 
     const numFlagsAround = cell.neighbors.reduce((acc, cell) => {
       if (cell.isFlagged) acc++;
@@ -135,7 +138,6 @@ export class Board {
   }
 
   getCellFromClick(e: MouseEvent): Cell | null {
-    console.log(`Board ID: ${this.id}`);
     if (!(e.target instanceof HTMLElement)) return null;
 
     if (!e.target.classList.contains("cell")) return null;
