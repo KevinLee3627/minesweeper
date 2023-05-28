@@ -114,37 +114,25 @@ export class Board {
     this.checkWin();
   }
 
-  // If clicking on a revealed cell, check if # of flags around it
-  // is equal to number of mines arouund it. If true, reveal the remaining squares.
-  // If false, do nothing.
   clickRevealedCell(row: number, col: number) {
     // AKA Chording
     const cell = this.cells[row][col];
 
-    const numFlagsAround = cell.neighbors.reduce((acc, cell) => {
-      if (cell.isFlagged) acc++;
-      return acc;
-    }, 0);
+    // Check if the flagged squares match the actual mines.
+    // If not, game over.
+    const flaggedMineNeighbors = cell.neighbors.filter(
+      cell => cell.isMine && cell.isFlagged
+    );
 
-    if (numFlagsAround === cell.minesAround) {
-      // Check if the flagged squares match the actual mines.
-      // If not, game over.
-
-      const flaggedMineNeighbors = cell.neighbors.filter(
-        cell => cell.isMine && cell.isFlagged
-      );
-
-      if (flaggedMineNeighbors.length !== cell.minesAround) {
-        this.gameOver();
-        return;
-      }
-      // If true, Reveal remaining squares
-      cell.neighbors.forEach(cell => {
-        if (cell.isFlagged || cell.isRevealed || cell.isMine) return;
-
-        cell.reveal();
-      });
+    if (flaggedMineNeighbors.length !== cell.minesAround) {
+      this.gameOver();
+      return;
     }
+    // If the correct mines are flagged, Reveal remaining squares
+    cell.neighbors.forEach(cell => {
+      if (cell.isFlagged || cell.isRevealed || cell.isMine) return;
+      cell.reveal();
+    });
   }
 
   getCellFromClick(e: MouseEvent): Cell | null {
