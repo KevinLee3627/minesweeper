@@ -1,4 +1,5 @@
 import { Board, BoardSettings } from "./board";
+import { Settings, SettingsManager } from "./settings";
 import { Timer } from "./timer";
 
 export enum Difficulty {
@@ -28,6 +29,11 @@ export class Game {
   board: Board | null = null;
   time = 0;
   difficulty: Difficulty = Difficulty.BEGINNER;
+  settings: Settings;
+
+  constructor(settings: Settings) {
+    this.settings = settings;
+  }
 
   setDifficulty(difficulty: Difficulty): void {
     this.difficulty = difficulty;
@@ -51,6 +57,13 @@ export class Game {
       throw new Error("Invalid game settings loaded.");
     }
     const timer = new Timer(1000);
+    console.log(this.settings);
+    if (this.settings.showTimer) {
+      timer.show();
+    } else {
+      timer.hide();
+    }
+
     const board = new Board({ ...boardSettings, timer });
     this.setBoard(board);
   }
@@ -73,11 +86,14 @@ function main() {
     btnSelectExpert,
   ];
 
-  const game = new Game();
+  const settingsManager = new SettingsManager();
+  settingsManager.save();
 
   difficultySelectBtns.forEach(btn => {
     btn.addEventListener("click", e => {
       if (!(e.target instanceof HTMLElement)) return;
+
+      const game = new Game(settingsManager.load());
 
       const difficulty = Number(e.target.dataset.difficulty);
       game.start(difficulty);

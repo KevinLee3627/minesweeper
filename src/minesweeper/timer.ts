@@ -28,6 +28,14 @@ export class Timer {
     cancelAnimationFrame(this.reqId);
   }
 
+  show() {
+    this.timerElem.hidden = false;
+  }
+
+  hide() {
+    this.timerElem.hidden = true;
+  }
+
   #update(timeStep: number) {
     this.total += timeStep;
 
