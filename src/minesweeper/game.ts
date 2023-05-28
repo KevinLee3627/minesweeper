@@ -1,7 +1,7 @@
 import { Board, BoardSettings } from "./board";
 import { Settings, SettingsManager } from "./settings";
 import { Timer } from "./timer";
-import { isMyCustomEvent } from "./util";
+import { isCustomEvent } from "./util";
 
 export enum Difficulty {
   BEGINNER,
@@ -79,7 +79,7 @@ export class Game {
   }
 
   end(e: Event) {
-    if (!isMyCustomEvent<GameEndEvent>(e, "status"))
+    if (!isCustomEvent<GameEndEvent>(e, "status"))
       throw new Error("Not gameEnd event");
     this.board?.cleanup();
     this.timer.hide();

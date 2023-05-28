@@ -1,5 +1,5 @@
-import { Setting } from "./setting";
-import { isSettingChangedEvent } from "./util";
+import { Setting, SettingChangedEvent } from "./setting";
+import { isCustomEvent } from "./util";
 
 export interface Settings {
   showTimer: boolean;
@@ -45,7 +45,7 @@ export class SettingsManager {
   }
 
   handleSettingChanged(e: Event) {
-    if (!isSettingChangedEvent(e))
+    if (!isCustomEvent<SettingChangedEvent>(e, "settingId"))
       throw new Error("Event is not a custom event");
     this.settings[e.detail.settingId] = e.detail.value;
     this.save();
