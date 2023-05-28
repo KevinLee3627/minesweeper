@@ -172,24 +172,11 @@ export class Board {
 
   checkWin() {
     // Check if all cells are revealed
-    console.log(`num revealed: ${this.numRevealed}`);
     if (this.numRevealed !== this.rows * this.cols - this.numMines) {
       return;
     }
 
     console.log("YOU WIN!");
-
-    // Check if flagged mines is correct
-    // Check if locations of flagged mines are correct
-    // const flaggedMineCells = this.cells
-    //   .flat()
-    //   .filter(cell => cell.isMine && cell.isFlagged);
-    // console.log(flaggedMineCells);
-    // if (flaggedMineCells.length !== this.numMines) {
-    //   console.log("NOT RIGHT");
-    //   return;
-    // }
-    // console.log("YOU WIN");
   }
 
   gameOver() {
