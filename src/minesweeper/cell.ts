@@ -27,11 +27,12 @@ export class Cell {
     this.elem = createElement({
       type: "div",
       classes: [
+        "cell",
         "h-6",
         "w-6",
         "border",
         "border-red-500",
-        "text-2xl",
+        "text-base",
         "text-white",
       ],
       attributes: [

@@ -78,7 +78,6 @@ function main() {
       if (!(e.target instanceof HTMLElement)) return;
 
       const difficulty = Number(e.target.dataset.difficulty);
-
       game.start(difficulty);
     });
   });
