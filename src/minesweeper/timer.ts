@@ -20,6 +20,9 @@ export class Timer {
 
   start() {
     if (!this.isStarted) {
+      this.current = Date.now();
+      this.previousTime = Date.now();
+      this.isStarted = true;
       this.#step();
     }
   }
@@ -39,6 +42,7 @@ export class Timer {
   reset() {
     this.stop();
     this.total = 0;
+    this.isStarted = false;
     this.timerElem.textContent = "";
   }
 

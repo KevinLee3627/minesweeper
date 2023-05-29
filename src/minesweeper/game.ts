@@ -38,7 +38,7 @@ difficultySettings.set(Difficulty.EXPERT, {
 
 export class Game {
   board: Board | null = null;
-  timer: Timer = new Timer(100);
+  timer: Timer = new Timer(1000);
   difficulty: Difficulty = Difficulty.BEGINNER;
   settings: Settings;
 
@@ -115,9 +115,11 @@ function main() {
     btn.addEventListener("click", e => {
       if (!(e.target instanceof HTMLElement)) return;
 
-      activeGame?.end(
-        new CustomEvent("gameEnd", { detail: { status: GameStatus.RESET } })
-      );
+      const gameEndEvent = new CustomEvent("gameEnd", {
+        bubbles: true,
+        detail: { status: GameStatus.RESET },
+      });
+      activeGame?.board?.elem.dispatchEvent(gameEndEvent);
 
       activeGame = new Game(settingsManager.load());
 
