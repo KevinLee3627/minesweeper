@@ -1,10 +1,22 @@
 import { Board, BoardSettings } from "./board";
+import { Settings, SettingsManager } from "./settings";
 import { Timer } from "./timer";
+import { isCustomEvent } from "./util";
 
 export enum Difficulty {
   BEGINNER,
   INTERMEDIATE,
   EXPERT,
+}
+
+export enum GameStatus {
+  WIN,
+  LOSE,
+  RESET,
+}
+
+export interface GameEndEvent {
+  status: GameStatus;
 }
 
 const difficultySettings: Map<Difficulty, BoardSettings> = new Map();
@@ -26,8 +38,19 @@ difficultySettings.set(Difficulty.EXPERT, {
 
 export class Game {
   board: Board | null = null;
-  time = 0;
+  timer: Timer = new Timer(100);
   difficulty: Difficulty = Difficulty.BEGINNER;
+  settings: Settings;
+
+  element: HTMLElement;
+
+  constructor(settings: Settings) {
+    this.settings = settings;
+    const element = document.getElementById("gameContainer");
+    if (element == null) throw new Error(`Could not gameContainer}`);
+    this.element = element;
+    this.element.addEventListener("gameEnd", this.end.bind(this));
+  }
 
   setDifficulty(difficulty: Difficulty): void {
     this.difficulty = difficulty;
@@ -37,22 +60,32 @@ export class Game {
     this.board = board;
   }
 
-  start(difficulty: Difficulty) {
-    // Clear Cell HTML elements that may exist.
-    const cells = Array.from(document.getElementsByClassName("cell"));
-    cells.forEach(element => {
-      element.remove();
-    });
-
-    this.board?.cleanup();
-
-    const boardSettings = difficultySettings.get(difficulty);
+  start() {
+    const boardSettings = difficultySettings.get(this.difficulty);
     if (boardSettings == null) {
       throw new Error("Invalid game settings loaded.");
     }
-    const timer = new Timer(1000);
-    const board = new Board({ ...boardSettings, timer });
+
+    if (this.settings.showTimer) {
+      this.timer.show();
+    } else {
+      this.timer.hide();
+    }
+
+    const board = new Board({ ...boardSettings, timer: this.timer });
     this.setBoard(board);
+  }
+
+  end(e: Event) {
+    if (!isCustomEvent<GameEndEvent>(e, "status"))
+      throw new Error("Not gameEnd event");
+    this.board?.cleanup();
+    this.timer.reset();
+    this.timer.hide();
+
+    if (this.settings.autoRestart) {
+      this.start();
+    }
   }
 }
 
@@ -73,14 +106,24 @@ function main() {
     btnSelectExpert,
   ];
 
-  const game = new Game();
+  const settingsManager = new SettingsManager();
+  settingsManager.save();
+
+  let activeGame: Game | null = null;
 
   difficultySelectBtns.forEach(btn => {
     btn.addEventListener("click", e => {
       if (!(e.target instanceof HTMLElement)) return;
 
+      activeGame?.end(
+        new CustomEvent("gameEnd", { detail: { status: GameStatus.RESET } })
+      );
+
+      activeGame = new Game(settingsManager.load());
+
       const difficulty = Number(e.target.dataset.difficulty);
-      game.start(difficulty);
+      activeGame.setDifficulty(difficulty);
+      activeGame.start();
     });
   });
 }

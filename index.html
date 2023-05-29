@@ -10,21 +10,38 @@
 
   <input type="checkbox" id="settingsModal" class="modal-toggle" />
   <label for="settingsModal" class="modal cursor-pointer">
-    <label for="" class="modal-box relative">
-      <h3>thanks</h3>
+    <label class="modal-box relative">
       <label
         for="settingsModal"
         class="btn btn-sm btn-circle absolute right-2 top-2"
         >✕</label
       >
+      <h1 class="text-2xl font-bold mb-2">Settings</h1>
+      <div id="settingsContainer" class="flex flex-col gap-2">
+        <div class="w-full flex justify-between">
+          <span>Show Timer</span>
+          <input type="checkbox" id="showTimer" class="toggle toggle-success" />
+        </div>
+        <div class="w-full flex justify-between">
+          <span>Automatically start new game</span>
+          <input
+            type="checkbox"
+            id="autoRestart"
+            class="toggle toggle-success"
+          />
+        </div>
+      </div>
     </label>
   </label>
 
   <body>
-    <div class="h-screen w-screen flex flex-col items-center gap-2">
-      <div id="timer">00:00</div>
+    <div
+      id="gameContainer"
+      class="h-screen w-screen flex flex-col items-center gap-2"
+    >
+      <div id="timer"></div>
       <div id="board" class="min-h-max min-w-max grid"></div>
-      <div id="settingsContainer" class="flex items-center gap-4">
+      <div class="flex items-center gap-4">
         <div id="difficultySelect" class="btn-group btn-group-horizontal">
           <button
             id="selectBeginner"
