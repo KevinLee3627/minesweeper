@@ -47,10 +47,13 @@
         <button id="restartBtn" class="btn btn-outline">😎</button>
         <div id="timer" class="text-2xl"></div>
       </div>
-      <div class="flex justify-space items-center">
+      <div class="flex justify-between items-center w-full">
         <!-- https://stackoverflow.com/a/65610410/6506007 -->
         <div class="grow basis-0"></div>
-        <div id="board" class="min-h-max min-w-max grid"></div>
+        <div
+          id="board"
+          class="min-h-max min-w-max grid justify-self-center"
+        ></div>
         <div id="gameEndBox" class="invisible card card-compact grow basis-0">
           <div class="card-body">
             <h2 id="gameEndBoxTitle" class="card-title">XZCZ</h2>
