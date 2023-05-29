@@ -17,12 +17,14 @@ export class Board {
   id: string = new Date().toISOString();
   rows: number;
   cols: number;
-  numMines: number;
   cells: Cell[][];
   boardStarted = false;
+  numMines: number;
   numRevealed = 0;
+  numFlagged = 0;
 
   headerElem: HTMLElement;
+  mineCountElem: HTMLElement;
   elem: HTMLElement;
   timer: Timer;
 
@@ -43,6 +45,15 @@ export class Board {
       throw new Error("Board header element not found.");
     }
     this.headerElem = headerElem;
+
+    const mineCountElem = document.getElementById("mineCount");
+    if (mineCountElem == null) {
+      throw new Error("Mine couunt element not found.");
+    }
+    this.mineCountElem = mineCountElem;
+    this.mineCountElem.textContent = `Mines remaining: ${
+      numMines - this.numFlagged
+    }`;
 
     this.elem.addEventListener("click", this.clickHandler);
     this.elem.addEventListener("contextmenu", this.rightClickHandler);
@@ -215,9 +226,16 @@ export class Board {
   handleRightClick(e: MouseEvent) {
     e.preventDefault();
     const cell = this.getCellFromClick(e);
-    if (cell == null) return;
+    if (cell == null || cell.isRevealed) return;
 
     cell.flag();
+
+    if (!cell.isFlagged) this.numFlagged--;
+    else this.numFlagged++;
+
+    this.mineCountElem.textContent = `Mines Remaining: ${
+      this.numMines - this.numFlagged
+    }`;
 
     this.checkWin();
   }
@@ -235,5 +253,7 @@ export class Board {
     cells.forEach(element => {
       element.remove();
     });
+
+    this.mineCountElem.textContent = "";
   }
 }
