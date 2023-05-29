@@ -60,8 +60,8 @@ export class Game {
     this.board = board;
   }
 
-  start(difficulty: Difficulty) {
-    const boardSettings = difficultySettings.get(difficulty);
+  start() {
+    const boardSettings = difficultySettings.get(this.difficulty);
     if (boardSettings == null) {
       throw new Error("Invalid game settings loaded.");
     }
@@ -84,7 +84,7 @@ export class Game {
     this.timer.hide();
 
     if (this.settings.autoRestart) {
-      this.start(this.difficulty);
+      this.start();
     }
   }
 }
@@ -122,7 +122,8 @@ function main() {
       activeGame = new Game(settingsManager.load());
 
       const difficulty = Number(e.target.dataset.difficulty);
-      activeGame.start(difficulty);
+      activeGame.setDifficulty(difficulty);
+      activeGame.start();
     });
   });
 }
