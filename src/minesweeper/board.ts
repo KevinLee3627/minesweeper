@@ -114,7 +114,6 @@ export class Board {
   }
 
   cellClick(row: number, col: number): void {
-    console.log(this.id);
     if (!this.boardStarted) {
       this.boardStarted = true;
       this.timer.start();

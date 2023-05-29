@@ -1,4 +1,5 @@
 import { Board, BoardSettings } from "./board";
+import { GameEndBox } from "./gameEndBox";
 import { Settings, SettingsManager } from "./settings";
 import { Timer } from "./timer";
 import { isCustomEvent } from "./util";
@@ -39,7 +40,7 @@ difficultySettings.set(Difficulty.EXPERT, {
 export class Game {
   board: Board | null = null;
   restartBtnElem: HTMLElement;
-  gameEndBoxElem: HTMLElement;
+  gameEndBox: GameEndBox;
   timer = new Timer(1000);
   difficulty: Difficulty = Difficulty.BEGINNER;
   settings: Settings;
@@ -58,9 +59,7 @@ export class Game {
     this.restartBtnElem = restartBtnElem;
     this.restartBtnElem.addEventListener("click", this.restart.bind(this));
 
-    const gameEndBoxElem = document.getElementById("gameEndBox");
-    if (gameEndBoxElem == null) throw new Error(`Could not find gameEndBox`);
-    this.gameEndBoxElem = gameEndBoxElem;
+    this.gameEndBox = new GameEndBox();
   }
 
   setDifficulty(difficulty: Difficulty): void {
@@ -72,7 +71,7 @@ export class Game {
   }
 
   start() {
-    this.gameEndBoxElem.classList.add("invisible");
+    this.gameEndBox.hide();
 
     const boardSettings = difficultySettings.get(this.difficulty);
     if (boardSettings == null) {
@@ -96,7 +95,10 @@ export class Game {
     this.timer.reset();
     this.timer.hide();
 
-    this.gameEndBoxElem.classList.remove("invisible");
+    if (e.detail.status === GameStatus.WIN) {
+      this.gameEndBox.setWin();
+    }
+    this.gameEndBox.show();
 
     if (this.settings.autoRestart) {
       this.start();
@@ -104,7 +106,6 @@ export class Game {
   }
 
   restart() {
-    console.log("restart");
     const gameEndEvent = new CustomEvent("gameEnd", {
       bubbles: true,
       detail: { status: GameStatus.RESET },
