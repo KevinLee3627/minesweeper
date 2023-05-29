@@ -15,6 +15,7 @@ export class Timer {
     if (timerElem == null) throw new Error("Timer element not found");
 
     this.timerElem = timerElem;
+    this.timerElem.textContent = "0";
     this.timeStep = timeStep;
   }
 

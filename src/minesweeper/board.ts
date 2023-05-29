@@ -232,9 +232,9 @@ export class Board {
     if (!cell.isFlagged) this.numFlagged--;
     else this.numFlagged++;
 
-    this.mineCountElem.textContent = `Mines Remaining: ${
-      this.numMines - this.numFlagged
-    }`;
+    this.mineCountElem.textContent = (this.numMines - this.numFlagged).toString(
+      10
+    );
 
     this.checkWin();
   }
@@ -254,5 +254,6 @@ export class Board {
     });
 
     this.mineCountElem.textContent = "";
+    this.headerElem.classList.add("invisible");
   }
 }
