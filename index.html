@@ -39,7 +39,15 @@
       id="gameContainer"
       class="h-screen w-screen flex flex-col items-center gap-2"
     >
-      <div id="timer"></div>
+      <div id="boardHeader" class="flex justify-around items-center invisible">
+        <div
+          id="mineCount"
+          class="text-2xl flex justify-center items-center"
+        ></div>
+        <button id="restartBtn" class="btn btn-outline">😎</button>
+        <div id="timer" class="text-2xl"></div>
+      </div>
+
       <div id="board" class="min-h-max min-w-max grid"></div>
       <div class="flex items-center gap-4">
         <div id="difficultySelect" class="btn-group btn-group-horizontal">

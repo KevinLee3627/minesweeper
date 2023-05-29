@@ -17,11 +17,14 @@ export class Board {
   id: string = new Date().toISOString();
   rows: number;
   cols: number;
-  numMines: number;
   cells: Cell[][];
   boardStarted = false;
+  numMines: number;
   numRevealed = 0;
+  numFlagged = 0;
 
+  headerElem: HTMLElement;
+  mineCountElem: HTMLElement;
   elem: HTMLElement;
   timer: Timer;
 
@@ -37,6 +40,20 @@ export class Board {
     }
     this.elem = boardElem;
 
+    const headerElem = document.getElementById("boardHeader");
+    if (headerElem == null) {
+      throw new Error("Board header element not found.");
+    }
+    this.headerElem = headerElem;
+    this.headerElem.classList.remove("invisible");
+
+    const mineCountElem = document.getElementById("mineCount");
+    if (mineCountElem == null) {
+      throw new Error("Mine couunt element not found.");
+    }
+    this.mineCountElem = mineCountElem;
+    this.mineCountElem.textContent = (numMines - this.numFlagged).toString();
+
     this.elem.addEventListener("click", this.clickHandler);
     this.elem.addEventListener("contextmenu", this.rightClickHandler);
     this.elem.addEventListener("reveal", this.revealHandler);
@@ -48,6 +65,7 @@ export class Board {
     this.elem.style.gridTemplateRows = `repeat(${rows}, 24px)`;
     this.elem.style.height = `${rows * 24}px`;
     this.elem.style.width = `${cols * 24}px`;
+    this.headerElem.style.width = `${cols * 24}px`;
 
     this.rows = rows;
     this.cols = cols;
@@ -207,9 +225,16 @@ export class Board {
   handleRightClick(e: MouseEvent) {
     e.preventDefault();
     const cell = this.getCellFromClick(e);
-    if (cell == null) return;
+    if (cell == null || cell.isRevealed) return;
 
     cell.flag();
+
+    if (!cell.isFlagged) this.numFlagged--;
+    else this.numFlagged++;
+
+    this.mineCountElem.textContent = (this.numMines - this.numFlagged).toString(
+      10
+    );
 
     this.checkWin();
   }
@@ -227,5 +252,8 @@ export class Board {
     cells.forEach(element => {
       element.remove();
     });
+
+    this.mineCountElem.textContent = "";
+    this.headerElem.classList.add("invisible");
   }
 }

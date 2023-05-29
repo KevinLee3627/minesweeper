@@ -15,6 +15,7 @@ export class Timer {
     if (timerElem == null) throw new Error("Timer element not found");
 
     this.timerElem = timerElem;
+    this.timerElem.textContent = "0";
     this.timeStep = timeStep;
   }
 
@@ -32,11 +33,11 @@ export class Timer {
   }
 
   show() {
-    this.timerElem.hidden = false;
+    this.timerElem.classList.remove("invisible");
   }
 
   hide() {
-    this.timerElem.hidden = true;
+    this.timerElem.classList.add("invisible");
   }
 
   reset() {

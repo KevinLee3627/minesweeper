@@ -38,7 +38,8 @@ difficultySettings.set(Difficulty.EXPERT, {
 
 export class Game {
   board: Board | null = null;
-  timer: Timer = new Timer(1000);
+  restartBtnElem: HTMLElement;
+  timer = new Timer(1000);
   difficulty: Difficulty = Difficulty.BEGINNER;
   settings: Settings;
 
@@ -50,6 +51,11 @@ export class Game {
     if (element == null) throw new Error(`Could not gameContainer}`);
     this.element = element;
     this.element.addEventListener("gameEnd", this.end.bind(this));
+
+    const restartBtnElem = document.getElementById("restartBtn");
+    if (restartBtnElem == null) throw new Error(`Could not find restartBtn`);
+    this.restartBtnElem = restartBtnElem;
+    this.restartBtnElem.addEventListener("click", this.restart.bind(this));
   }
 
   setDifficulty(difficulty: Difficulty): void {
@@ -86,6 +92,17 @@ export class Game {
     if (this.settings.autoRestart) {
       this.start();
     }
+  }
+
+  restart() {
+    console.log("restart");
+    const gameEndEvent = new CustomEvent("gameEnd", {
+      bubbles: true,
+      detail: { status: GameStatus.RESET },
+    });
+    this.board?.elem.dispatchEvent(gameEndEvent);
+
+    this.start();
   }
 }
 
