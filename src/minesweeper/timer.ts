@@ -19,8 +19,9 @@ export class Timer {
   }
 
   start() {
-    console.log("Started timer");
     if (!this.isStarted) {
+      this.current = Date.now();
+      this.previousTime = Date.now();
       this.isStarted = true;
       this.#step();
     }
