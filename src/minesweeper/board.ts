@@ -1,5 +1,5 @@
 import { Cell } from "./cell";
-import { GameStatus } from "./game";
+import { GameEndEvent, GameStatus } from "./game";
 import { Timer } from "./timer";
 import { getRandomInt } from "./util";
 
@@ -22,6 +22,9 @@ export class Board {
   numMines: number;
   numRevealed = 0;
   numFlagged = 0;
+
+  startTime = 0;
+  endTime = 0;
 
   headerElem: HTMLElement;
   mineCountElem: HTMLElement;
@@ -117,6 +120,7 @@ export class Board {
     if (!this.boardStarted) {
       this.boardStarted = true;
       this.timer.start();
+      this.startTime = Date.now();
     }
     const cell = this.cells[row][col];
     if (cell.isMine) {
@@ -196,20 +200,22 @@ export class Board {
     }
 
     this.timer.stop();
-
-    const gameEndEvent = new CustomEvent("gameEnd", {
+    this.endTime = Date.now();
+    const timeElapsed = this.endTime - this.startTime;
+    const gameEndEvent = new CustomEvent<GameEndEvent>("gameEnd", {
       bubbles: true,
-      detail: { status: GameStatus.WIN },
+      detail: { status: GameStatus.WIN, timeElapsed },
     });
     this.elem.dispatchEvent(gameEndEvent);
   }
 
   gameOver() {
     this.timer.stop();
-
-    const gameEndEvent = new CustomEvent("gameEnd", {
+    this.endTime = Date.now();
+    const timeElapsed = this.endTime - this.startTime;
+    const gameEndEvent = new CustomEvent<GameEndEvent>("gameEnd", {
       bubbles: true,
-      detail: { status: GameStatus.LOSE },
+      detail: { status: GameStatus.LOSE, timeElapsed },
     });
     this.elem.dispatchEvent(gameEndEvent);
   }

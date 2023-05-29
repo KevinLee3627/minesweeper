@@ -18,8 +18,9 @@ export function isCustomEvent<T>(
 
 export function msToTime(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000);
+  const msRemainder = ms % 1000;
   const seconds = totalSeconds % 60;
   const secondsStr = seconds < 10 ? `0${seconds}` : `${seconds}`;
   const minutes = Math.floor(totalSeconds / 60);
-  return `${minutes}:${secondsStr}`;
+  return `${minutes}:${secondsStr}.${msRemainder}`;
 }

@@ -18,6 +18,7 @@ export enum GameStatus {
 
 export interface GameEndEvent {
   status: GameStatus;
+  timeElapsed: number; // ms
 }
 
 const difficultySettings: Map<Difficulty, BoardSettings> = new Map();
@@ -100,7 +101,7 @@ export class Game {
     } else if (e.detail.status === GameStatus.LOSE) {
       this.gameEndBox.setLose();
     }
-
+    this.gameEndBox.setTimeElapsed(e.detail.timeElapsed);
     this.gameEndBox.show();
 
     if (this.settings.autoRestart) {
@@ -145,9 +146,9 @@ function main() {
     btn.addEventListener("click", e => {
       if (!(e.target instanceof HTMLElement)) return;
 
-      const gameEndEvent = new CustomEvent("gameEnd", {
+      const gameEndEvent = new CustomEvent<GameEndEvent>("gameEnd", {
         bubbles: true,
-        detail: { status: GameStatus.RESET },
+        detail: { status: GameStatus.RESET, timeElapsed: 0 },
       });
       activeGame?.board?.elem.dispatchEvent(gameEndEvent);
 
