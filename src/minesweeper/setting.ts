@@ -17,13 +17,16 @@ export class Setting {
     this.value = defaultValue;
     this.element.addEventListener("click", () => {
       this.value = this.element.checked;
-      const settingsChangedEvent = new CustomEvent("settingChanged", {
-        bubbles: true,
-        detail: {
-          settingId,
-          value: this.value,
-        },
-      });
+      const settingsChangedEvent = new CustomEvent<SettingChangedEvent>(
+        "settingChanged",
+        {
+          bubbles: true,
+          detail: {
+            settingId,
+            value: this.value,
+          },
+        }
+      );
       this.element.dispatchEvent(settingsChangedEvent);
     });
   }

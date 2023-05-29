@@ -1,4 +1,5 @@
 import { Board, BoardSettings } from "./board";
+import { GameEndBox } from "./gameEndBox";
 import { Settings, SettingsManager } from "./settings";
 import { Timer } from "./timer";
 import { isCustomEvent } from "./util";
@@ -17,6 +18,7 @@ export enum GameStatus {
 
 export interface GameEndEvent {
   status: GameStatus;
+  timeElapsed: number; // ms
 }
 
 const difficultySettings: Map<Difficulty, BoardSettings> = new Map();
@@ -39,6 +41,7 @@ difficultySettings.set(Difficulty.EXPERT, {
 export class Game {
   board: Board | null = null;
   restartBtnElem: HTMLElement;
+  gameEndBox: GameEndBox;
   timer = new Timer(1000);
   difficulty: Difficulty = Difficulty.BEGINNER;
   settings: Settings;
@@ -56,6 +59,8 @@ export class Game {
     if (restartBtnElem == null) throw new Error(`Could not find restartBtn`);
     this.restartBtnElem = restartBtnElem;
     this.restartBtnElem.addEventListener("click", this.restart.bind(this));
+
+    this.gameEndBox = new GameEndBox();
   }
 
   setDifficulty(difficulty: Difficulty): void {
@@ -67,6 +72,8 @@ export class Game {
   }
 
   start() {
+    this.gameEndBox.hide();
+
     const boardSettings = difficultySettings.get(this.difficulty);
     if (boardSettings == null) {
       throw new Error("Invalid game settings loaded.");
@@ -89,13 +96,20 @@ export class Game {
     this.timer.reset();
     this.timer.hide();
 
+    if (e.detail.status === GameStatus.WIN) {
+      this.gameEndBox.setWin();
+    } else if (e.detail.status === GameStatus.LOSE) {
+      this.gameEndBox.setLose();
+    }
+    this.gameEndBox.setTimeElapsed(e.detail.timeElapsed);
+    this.gameEndBox.show();
+
     if (this.settings.autoRestart) {
       this.start();
     }
   }
 
   restart() {
-    console.log("restart");
     const gameEndEvent = new CustomEvent("gameEnd", {
       bubbles: true,
       detail: { status: GameStatus.RESET },
@@ -132,9 +146,9 @@ function main() {
     btn.addEventListener("click", e => {
       if (!(e.target instanceof HTMLElement)) return;
 
-      const gameEndEvent = new CustomEvent("gameEnd", {
+      const gameEndEvent = new CustomEvent<GameEndEvent>("gameEnd", {
         bubbles: true,
-        detail: { status: GameStatus.RESET },
+        detail: { status: GameStatus.RESET, timeElapsed: 0 },
       });
       activeGame?.board?.elem.dispatchEvent(gameEndEvent);
 
