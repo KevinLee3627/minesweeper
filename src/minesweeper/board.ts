@@ -119,6 +119,9 @@ export class Board {
     // AKA Chording
     const cell = this.cells[row][col];
 
+    const flaggedNeighbors = cell.neighbors.filter(cell => cell.isFlagged);
+    if (flaggedNeighbors.length !== cell.minesAround) return;
+
     // Check if the flagged squares match the actual mines.
     // If not, game over.
     const flaggedMineNeighbors = cell.neighbors.filter(
