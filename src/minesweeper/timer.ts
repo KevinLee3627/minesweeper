@@ -19,6 +19,7 @@ export class Timer {
   }
 
   start() {
+    console.log("Started timer");
     if (!this.isStarted) {
       this.isStarted = true;
       this.#step();
