@@ -22,6 +22,7 @@ export class Board {
   boardStarted = false;
   numRevealed = 0;
 
+  headerElem: HTMLElement;
   elem: HTMLElement;
   timer: Timer;
 
@@ -37,6 +38,12 @@ export class Board {
     }
     this.elem = boardElem;
 
+    const headerElem = document.getElementById("boardHeader");
+    if (headerElem == null) {
+      throw new Error("Board header element not found.");
+    }
+    this.headerElem = headerElem;
+
     this.elem.addEventListener("click", this.clickHandler);
     this.elem.addEventListener("contextmenu", this.rightClickHandler);
     this.elem.addEventListener("reveal", this.revealHandler);
@@ -48,6 +55,7 @@ export class Board {
     this.elem.style.gridTemplateRows = `repeat(${rows}, 24px)`;
     this.elem.style.height = `${rows * 24}px`;
     this.elem.style.width = `${cols * 24}px`;
+    this.headerElem.style.width = `${cols * 24}px`;
 
     this.rows = rows;
     this.cols = cols;

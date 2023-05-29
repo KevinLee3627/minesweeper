@@ -39,7 +39,11 @@
       id="gameContainer"
       class="h-screen w-screen flex flex-col items-center gap-2"
     >
-      <div id="timer"></div>
+      <div id="boardHeader" class="flex justify-between">
+        <div id="mineCounter">Mines Remaining:</div>
+        <div id="timer"></div>
+      </div>
+
       <div id="board" class="min-h-max min-w-max grid"></div>
       <div class="flex items-center gap-4">
         <div id="difficultySelect" class="btn-group btn-group-horizontal">
