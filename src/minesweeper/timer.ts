@@ -3,7 +3,7 @@ export class Timer {
   timerElem: HTMLElement;
   reqId = 0;
 
-  timeStep = 50; // ms
+  timeStep = 1000; // ms
   current = Date.now();
   previousTime = Date.now();
   lag = 0;
@@ -45,7 +45,7 @@ export class Timer {
   #update(timeStep: number) {
     this.total += timeStep;
 
-    this.timerElem.textContent = this.total.toString(10);
+    this.timerElem.textContent = (this.total / 1000).toString(10);
   }
 
   #step() {
