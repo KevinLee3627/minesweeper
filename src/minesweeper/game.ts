@@ -39,7 +39,7 @@ difficultySettings.set(Difficulty.EXPERT, {
 export class Game {
   board: Board | null = null;
   restartBtnElem: HTMLElement;
-  timer: Timer = new Timer(1000);
+  timer = new Timer(1000);
   difficulty: Difficulty = Difficulty.BEGINNER;
   settings: Settings;
 

@@ -32,11 +32,11 @@ export class Timer {
   }
 
   show() {
-    this.timerElem.hidden = false;
+    this.timerElem.classList.remove("invisible");
   }
 
   hide() {
-    this.timerElem.hidden = true;
+    this.timerElem.classList.add("invisible");
   }
 
   reset() {
