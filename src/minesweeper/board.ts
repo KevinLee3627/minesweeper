@@ -45,15 +45,14 @@ export class Board {
       throw new Error("Board header element not found.");
     }
     this.headerElem = headerElem;
+    this.headerElem.classList.remove("invisible");
 
     const mineCountElem = document.getElementById("mineCount");
     if (mineCountElem == null) {
       throw new Error("Mine couunt element not found.");
     }
     this.mineCountElem = mineCountElem;
-    this.mineCountElem.textContent = `Mines remaining: ${
-      numMines - this.numFlagged
-    }`;
+    this.mineCountElem.textContent = (numMines - this.numFlagged).toString();
 
     this.elem.addEventListener("click", this.clickHandler);
     this.elem.addEventListener("contextmenu", this.rightClickHandler);
