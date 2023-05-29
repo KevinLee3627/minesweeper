@@ -12,6 +12,7 @@ export enum Difficulty {
 export enum GameStatus {
   WIN,
   LOSE,
+  RESET,
 }
 
 export interface GameEndEvent {
@@ -81,6 +82,10 @@ export class Game {
     this.board?.cleanup();
     this.timer.reset();
     this.timer.hide();
+
+    if (this.settings.autoRestart) {
+      this.start(this.difficulty);
+    }
   }
 }
 
@@ -104,14 +109,20 @@ function main() {
   const settingsManager = new SettingsManager();
   settingsManager.save();
 
+  let activeGame: Game | null = null;
+
   difficultySelectBtns.forEach(btn => {
     btn.addEventListener("click", e => {
       if (!(e.target instanceof HTMLElement)) return;
 
-      const game = new Game(settingsManager.load());
+      activeGame?.end(
+        new CustomEvent("gameEnd", { detail: { status: GameStatus.RESET } })
+      );
+
+      activeGame = new Game(settingsManager.load());
 
       const difficulty = Number(e.target.dataset.difficulty);
-      game.start(difficulty);
+      activeGame.start(difficulty);
     });
   });
 }
