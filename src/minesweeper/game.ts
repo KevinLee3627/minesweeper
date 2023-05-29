@@ -97,7 +97,10 @@ export class Game {
 
     if (e.detail.status === GameStatus.WIN) {
       this.gameEndBox.setWin();
+    } else if (e.detail.status === GameStatus.LOSE) {
+      this.gameEndBox.setLose();
     }
+
     this.gameEndBox.show();
 
     if (this.settings.autoRestart) {
